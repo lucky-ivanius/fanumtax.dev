@@ -1,0 +1,23 @@
+{
+	"name": "fanumtax",
+	"private": true,
+	"workspaces": [
+		"apps/*",
+		"packages/*"
+	],
+	"scripts": {
+		"dev": "bun --filter '*' dev",
+		"build": "bun --filter '*' build",
+		"test": "bun --filter '*' test",
+		"format": "biome format --write",
+		"lint": "biome lint",
+		"lint:staged": "biome lint --staged"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.2.4",
+		"@types/bun": "latest"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	}
+}
