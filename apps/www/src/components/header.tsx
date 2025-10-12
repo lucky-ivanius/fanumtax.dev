@@ -10,17 +10,11 @@ const Header: React.FC = () => {
   const [isEnded, setIsEnded] = useState(false);
 
   useLenis((lenis) => {
-    if (lenis.progress !== 0) {
-      setIsLoading(true);
-    } else {
-      setIsLoading(false);
-    }
+    const newIsLoading = lenis.progress !== 0;
+    const newIsEnded = lenis.progress >= 0.98;
 
-    if (lenis.progress >= 0.98) {
-      setIsEnded(true);
-    } else {
-      setIsEnded(false);
-    }
+    setIsLoading((prev) => (prev !== newIsLoading ? newIsLoading : prev));
+    setIsEnded((prev) => (prev !== newIsEnded ? newIsEnded : prev));
   });
 
   return (
