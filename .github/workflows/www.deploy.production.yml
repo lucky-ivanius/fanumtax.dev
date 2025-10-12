@@ -1,4 +1,4 @@
-name: Deploy WWW to Cloudflare Pages
+name: Deploy WWW to Production
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    name: Deploy to Cloudflare Pages
+    name: Deploy to Cloudflare Pages (Production)
     permissions:
       contents: read
       deployments: write
