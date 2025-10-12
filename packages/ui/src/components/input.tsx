@@ -1,5 +1,3 @@
-import type * as React from "react";
-
 import { cn } from "@fanumtax/utils/class-name";
 
 function Input({ className, type, ...props }: React.ComponentProps<"input">) {
