@@ -2,7 +2,7 @@
 "@fanumtax/www": major
 ---
 
-Initial launch of the fanumtax.dev website
+Initial launch of the fanumtax.dev website.
 
 This major release introduces the complete fanumtax.dev website with the following features:
 
