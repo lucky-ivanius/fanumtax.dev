@@ -20,7 +20,6 @@
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.13",
-    "@types/bun": "latest",
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",
     "@vitejs/plugin-react-swc": "^4.0.0",
