@@ -38,5 +38,4 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          environment: staging
           command: pages deploy apps/www/dist --project-name=fanumtax-www --branch=staging
