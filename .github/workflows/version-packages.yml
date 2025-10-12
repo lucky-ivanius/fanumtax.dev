@@ -49,5 +49,5 @@ jobs:
           fi
 
       - name: Create release tags
-        if: steps.commit.outputs.changes == 'true' && inputs.create_tags == 'true'
+        if: steps.commit.outputs.changes == 'true' && inputs.create_tags == true
         run: bun run release
