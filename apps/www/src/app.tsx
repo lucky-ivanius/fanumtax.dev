@@ -11,8 +11,7 @@ import Trust from "./components/sections/trust";
 
 const App: React.FC = () => {
   return (
-    <>
-      <ReactLenis root />
+    <ReactLenis root>
       <div className="min-h-screen">
         <Header />
         <Hero />
@@ -23,7 +22,7 @@ const App: React.FC = () => {
         <Trust />
         <Ready />
       </div>
-    </>
+    </ReactLenis>
   );
 };
 
