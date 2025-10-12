@@ -26,7 +26,7 @@ const Header: React.FC = () => {
       )}
     >
       <nav className="container mx-auto flex items-center justify-between gap-8">
-        <a href="/#" className="font-medium text-primary text-xl leading-tight transition-colors duration-100">
+        <a href="/" className="font-medium text-primary text-xl leading-tight transition-colors duration-100">
           {"<fanumtax.dev/>"}
         </a>
         <div className="hidden items-center gap-12 md:flex">
