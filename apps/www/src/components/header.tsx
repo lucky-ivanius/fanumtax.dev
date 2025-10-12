@@ -48,7 +48,7 @@ const Header: React.FC = () => {
           size="lg"
           className="border-2 border-primary transition-all duration-100 hover:bg-background hover:text-primary"
         >
-          <a href="/app">
+          <a href={import.meta.env.VITE_APP_URL ?? "/app"}>
             Build <Rocket />
           </a>
         </Button>
