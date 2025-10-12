@@ -52,9 +52,7 @@ const Funders: React.FC = () => (
           </CardContent>
 
           <CardFooter className="flex items-center justify-end gap-4">
-            <Button aria-label="Fund" className="w-full">
-              FUND
-            </Button>
+            <Button className="w-full">FUND</Button>
           </CardFooter>
         </Card>
       </div>
