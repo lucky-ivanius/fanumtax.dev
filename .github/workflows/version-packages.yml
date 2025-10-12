@@ -1,0 +1,53 @@
+name: Version Packages
+
+on:
+  workflow_dispatch:
+    inputs:
+      create_tags:
+        description: 'Create release tags after versioning'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  version:
+    name: Version Packages and Create Tags
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Run changeset version
+        run: bun run version
+
+      - name: Commit version changes
+        id: commit
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git add .
+            git commit -m "chore: version packages"
+            git push
+            echo "changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "No version changes to commit"
+            echo "changes=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create release tags
+        if: steps.commit.outputs.changes == 'true' && inputs.create_tags == true
+        run: bun run release
