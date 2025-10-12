@@ -3,7 +3,7 @@ name: Deploy WWW to Cloudflare Pages
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - '@fanumtax/www@*.*.*'
   workflow_dispatch:
 
 jobs:
