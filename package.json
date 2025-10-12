@@ -1,6 +1,5 @@
 {
   "name": "fanumtax",
-  "private": true,
   "workspaces": [
     "apps/*",
     "packages/*"
@@ -14,7 +13,7 @@
     "lint:staged": "biome lint --staged",
     "changeset": "changeset",
     "version": "changeset version",
-    "release": "bun run build && changeset publish"
+    "release": "changeset tag"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.2.4",
