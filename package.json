@@ -13,7 +13,7 @@
     "lint:staged": "biome lint --staged",
     "changeset": "changeset",
     "version": "changeset version",
-    "release": "changeset tag"
+    "release": "changeset tag && git push --follow-tags"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.2.5",
