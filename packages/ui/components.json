@@ -10,11 +10,11 @@
     "cssVariables": true,
     "prefix": ""
   },
+  "iconLibrary": "lucide",
   "aliases": {
     "components": "@/components",
-    "ui": "@/components",
     "utils": "@fanumtax/utils/class-name",
+    "ui": "@/components",
     "hooks": "@/hooks"
-  },
-  "iconLibrary": "lucide"
+  }
 }
