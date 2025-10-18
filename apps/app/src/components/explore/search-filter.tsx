@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronDown, Loader2Icon, Search } from "lucide-react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -30,20 +30,24 @@ const searchFilterFormSchema = z.object({
 
 type SearchFilterFormData = z.infer<typeof searchFilterFormSchema>;
 
-export const SearchFilter: React.FC = () => {
+interface SearchFilterProps {
+  defaultOpen?: boolean;
+  values: SearchFilterFormData;
+}
+
+export const SearchFilter: React.FC<SearchFilterProps> = ({ defaultOpen = false, values }) => {
   const pathname = usePathname();
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [isLoading, startTransition] = useTransition();
 
-  const [open, setOpen] = useState(!!searchParams.size);
+  const [open, setOpen] = useState(defaultOpen);
 
   const form = useForm<SearchFilterFormData>({
     resolver: zodResolver(searchFilterFormSchema),
     values: {
-      q: searchParams.get("q") ?? "",
-      lang: searchParams.get("lang")?.split(",") ?? [],
-      sort: searchParams.get("sort") ?? "",
+      q: values.q ?? "",
+      lang: values.lang ?? [],
+      sort: values.sort ?? "",
     },
   });
 
