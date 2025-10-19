@@ -1,17 +1,23 @@
 import type { NextPage } from "next";
 
+import type { SearchParamsValue } from "@/utils/search-params";
 import { SearchFilter } from "@/components/explore/search-filter";
+import { forceArrays } from "@/utils/search-params";
 
 interface ExploreProps {
   searchParams: Promise<{
-    q?: string;
-    lang?: string;
-    sort?: string;
+    q?: SearchParamsValue;
+    lang?: SearchParamsValue;
+    sort?: SearchParamsValue;
   }>;
 }
 
 const Explore: NextPage<ExploreProps> = async ({ searchParams }) => {
-  const _searchParams = await searchParams;
+  const _searchParams = forceArrays(await searchParams);
+
+  const [q] = _searchParams.q ?? [];
+  const [lang] = _searchParams.lang ?? [];
+  const [sort] = _searchParams.sort ?? [];
 
   return (
     <main className="bg-background px-4 py-4 md:px-8">
@@ -23,9 +29,9 @@ const Explore: NextPage<ExploreProps> = async ({ searchParams }) => {
         <SearchFilter
           defaultOpen={!!Object.keys(_searchParams).length}
           values={{
-            q: _searchParams.q,
-            lang: _searchParams.lang?.split(","),
-            sort: _searchParams.sort,
+            q,
+            lang: lang?.split(","),
+            sort,
           }}
         />
       </section>
