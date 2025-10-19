@@ -76,7 +76,7 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({ defaultOpen = false,
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className={cn("flex flex-col gap-6 bg-card p-6 shadow", !open && "hidden", "md:hidden")}
+          className={cn("flex flex-col gap-6 bg-card p-6 shadow", !open && "hidden", "md:flex")}
         >
           <FormField
             control={form.control}
@@ -94,64 +94,85 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({ defaultOpen = false,
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="lang"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Skills</FormLabel>
-                <FormControl>
-                  <MultiSelect {...field}>
-                    <MultiSelectTrigger className="w-full">
-                      <MultiSelectValue
-                        formatSelected={(selectedValues) => `${selectedValues.size} languages selected`}
-                        placeholder="Select languages..."
-                      />
-                    </MultiSelectTrigger>
-                    <MultiSelectContent
-                      search={{
-                        emptyMessage: "No languages found",
-                      }}
-                    >
-                      {LANG_OPTIONS.map(({ value, label }) => (
-                        <MultiSelectItem key={value} value={value}>
-                          {label}
-                        </MultiSelectItem>
-                      ))}
-                    </MultiSelectContent>
-                  </MultiSelect>
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="sort"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Sort by</FormLabel>
-                <FormControl>
-                  <Select {...field} onValueChange={field.onChange}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Sort by" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {SORT_OPTIONS.map(({ value, label }) => (
-                        <SelectItem key={value} value={value}>
-                          {label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-              </FormItem>
-            )}
-          />
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-4 md:gap-4">
+            <FormField
+              control={form.control}
+              name="lang"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Skills</FormLabel>
+                  <FormControl>
+                    <MultiSelect {...field}>
+                      <MultiSelectTrigger className="w-full">
+                        <MultiSelectValue
+                          formatSelected={(selectedValues) => `${selectedValues.size} languages selected`}
+                          placeholder="Select languages..."
+                        />
+                      </MultiSelectTrigger>
+                      <MultiSelectContent
+                        search={{
+                          emptyMessage: "No languages found",
+                        }}
+                      >
+                        {LANG_OPTIONS.map(({ value, label }) => (
+                          <MultiSelectItem key={value} value={value}>
+                            {label}
+                          </MultiSelectItem>
+                        ))}
+                      </MultiSelectContent>
+                    </MultiSelect>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="sort"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Sort by</FormLabel>
+                  <FormControl>
+                    <Select {...field} onValueChange={field.onChange}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Sort by" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {SORT_OPTIONS.map(({ value, label }) => (
+                          <SelectItem key={value} value={value}>
+                            {label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          </div>
 
-          <Button type="submit" disabled={isLoading}>
-            {isLoading && <Loader2Icon className="animate-spin" />}
-            {isLoading ? "Searching" : "Apply Filters"}
-          </Button>
+          <div className="flex items-center justify-end gap-4 md:flex-row-reverse md:justify-end">
+            {/* <Button
+              type="button"
+              variant="secondary"
+              disabled={isLoading}
+              onClick={() => {
+                form.reset({
+                  q: "",
+                  lang: [],
+                  sort: "",
+                });
+
+                form.handleSubmit(onSubmit)();
+              }}
+            >
+              Clear
+            </Button> */}
+
+            <Button type="submit" disabled={isLoading} className="flex-1 md:flex-none">
+              {isLoading && <Loader2Icon className="animate-spin" />}
+              {isLoading ? "Searching" : "Apply"}
+            </Button>
+          </div>
         </form>
       </Form>
     </div>
