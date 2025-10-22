@@ -4,6 +4,7 @@ import { Hono } from "hono";
 import { validator } from "hono/validator";
 import { z } from "zod";
 
+import type { Issue } from "@fanumtax/core/issue";
 import type { LanguageName } from "@fanumtax/core/language";
 import type { LicenseKey } from "@fanumtax/core/license";
 import type { Pagination } from "@fanumtax/core/pagination";
@@ -253,6 +254,78 @@ reposHandlers
       } satisfies Repository);
     }
   )
-  .get("/github/:owner/:name/issues", async (c) => {});
+  .get(
+    "/github/:owner/:name/issues",
+    authMiddleware({
+      verify: async (token, c) => verify(token, c.env.JWT_SECRET),
+      optional: true,
+    }),
+    validator(
+      "query",
+      schema(
+        z.object({
+          platform: z.enum(["github"]).default("github"),
+          q: z.string().default(""),
+          limit: z.coerce
+            .number({
+              error: ({ input }) => (input ? "Limit must be an integer number" : "Limit is required"),
+            })
+            .min(1, { message: "Limit must be greater than or equal to 1" })
+            .max(100, { message: "Limit must be less than or equal to 100" })
+            .int({
+              error: "Limit must be an integer number",
+            })
+            .default(10),
+          offset: z.coerce
+            .number({
+              error: ({ input }) => (input ? "Offset must be an integer number" : "Offset is required"),
+            })
+            .min(0, { message: "Offset must be greater than or equal to 0" })
+            .int({
+              error: "Offset must be an integer number",
+            })
+            .default(0),
+        })
+      )
+    ),
+    async (c) => {
+      const { owner, name } = c.req.param();
+      const { q, limit, offset } = c.req.valid("query");
+
+      const db = drizzle(c.env.D1);
+
+      const [connectedGithub] = c.var.auth
+        ? await db.select().from(tables.connections).where(eq(tables.connections.userId, c.var.auth.sub))
+        : [null];
+
+      const githubRepositoryDiscovery = createGithubRepositoryAdapter(
+        connectedGithub?.token ?? c.env.GITHUB_DEFAULT_ACCESS_TOKEN
+      );
+
+      const searchIssuesResult = await githubRepositoryDiscovery.searchIssues({
+        query: q,
+        owner,
+        repo: name,
+        limit,
+        offset,
+      });
+      if (!searchIssuesResult.success) {
+        switch (searchIssuesResult.error) {
+          case "unexpected_error":
+            return unexpectedError(c);
+        }
+      }
+
+      const { items, total } = searchIssuesResult.data;
+
+      return ok<typeof c, Pagination<Issue>>(c, {
+        items: items.map((item) => ({
+          ...item,
+          bounty: null, // TODO: Get bounty from blockchain
+        })),
+        total,
+      });
+    }
+  );
 
 export { reposHandlers };
