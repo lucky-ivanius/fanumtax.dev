@@ -26,6 +26,7 @@ type MultiSelectContextType = {
   items: Map<string, ReactNode>;
   onItemAdded: (value: string, label: ReactNode) => void;
   name: string;
+  disabled?: boolean;
 };
 const MultiSelectContext = createContext<MultiSelectContextType | null>(null);
 
@@ -36,6 +37,7 @@ export function MultiSelect({
   defaultValues,
   onChange,
   name,
+  disabled,
 }: {
   children: ReactNode;
   value?: string[];
@@ -43,6 +45,7 @@ export function MultiSelect({
   defaultValues?: string[];
   onChange?: (values: string[]) => void;
   name: string;
+  disabled?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const controlledValue = value ?? values;
@@ -88,6 +91,7 @@ export function MultiSelect({
         items,
         onItemAdded,
         name,
+        disabled,
       }}
     >
       <Popover open={open} onOpenChange={setOpen}>
@@ -105,12 +109,13 @@ export function MultiSelectTrigger({
   className?: string;
   children?: ReactNode;
 } & ComponentPropsWithoutRef<typeof Button>) {
-  const { open } = useMultiSelectContext();
+  const { open, disabled } = useMultiSelectContext();
 
   return (
-    <PopoverTrigger asChild>
+    <PopoverTrigger asChild disabled={disabled}>
       <Button
         {...props}
+        disabled={disabled}
         variant={props.variant ?? "outline"}
         role={props.role ?? "combobox"}
         aria-expanded={props["aria-expanded"] ?? open}
