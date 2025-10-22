@@ -1,4 +1,4 @@
-import type { Repository as GitHubRepository } from "@octokit/graphql-schema";
+import type { Issue as GitHubIssue, Repository as GitHubRepository } from "@octokit/graphql-schema";
 import { Octokit, RequestError } from "octokit";
 
 import type { LanguageName } from "@fanumtax/core/language";
@@ -7,7 +7,7 @@ import { DEFAULT_LANGUAGE_COLOR, LANGUAGE_LIST, LANGUAGES } from "@fanumtax/core
 import { LICENSE_LIST, LICENSES } from "@fanumtax/core/license";
 import { err, ok } from "@fanumtax/utils/result";
 
-import type { ExternalRepository, RepositoryAdapter } from "../../interfaces/repository-adapter";
+import type { ExternalIssue, ExternalRepository, RepositoryAdapter } from "../../interfaces/repository-adapter";
 
 export const createGithubRepositoryAdapter = (accessToken: string): RepositoryAdapter => {
   const octokit = new Octokit({
@@ -126,6 +126,67 @@ export const createGithubRepositoryAdapter = (accessToken: string): RepositoryAd
               }) satisfies ExternalRepository
           ),
           total: results.search.repositoryCount,
+        });
+      } catch (error) {
+        return err("unexpected_error", (error as Error).message);
+      }
+    },
+    searchIssues: async ({ owner, repo, query, limit = 10, offset = 0 }) => {
+      try {
+        const formattedQuery = [`repo:${owner}/${repo}`, "is:issue", "is:open", query].filter(Boolean).join(" ");
+
+        const results = await octokit.graphql<{
+          search: {
+            nodes: GitHubIssue[];
+            issueCount: number;
+          };
+        }>(
+          `
+            query SearchIssues($q: String!, $type: SearchType!, $first: Int!, $after: String) {
+              search (query: $q, type: $type, first: $first, after: $after) {
+                nodes {
+                  ... on Issue {
+                    number
+                    title
+                    body
+                    state
+                    author {
+                      login
+                      avatarUrl
+                      url
+                    }
+                  }
+                }
+                issueCount
+              }
+            }
+          `,
+          {
+            q: formattedQuery,
+            type: "ISSUE",
+            first: limit,
+            after: btoa(`cursor:${offset}`),
+          }
+        );
+
+        return ok({
+          items: results.search.nodes.map(
+            (node) =>
+              ({
+                number: node.number,
+                title: node.title,
+                body: node.body,
+                state: "open", // Handled by query string
+                author: node.author
+                  ? {
+                      username: node.author.login,
+                      avatarUrl: node.author.avatarUrl,
+                      url: node.author.url,
+                    }
+                  : null,
+              }) satisfies ExternalIssue
+          ),
+          total: results.search.issueCount,
         });
       } catch (error) {
         return err("unexpected_error", (error as Error).message);
