@@ -32,22 +32,34 @@ export const getRepo = async (
   }
 };
 
-export type GetFundedReposRequest = {
+export type SearchFundedReposRequest = {
   sort?: string;
+  languages?: string[];
+  licenses?: string[];
   limit?: number;
   offset?: number;
 };
 
-export type GetFundedReposResult = Result<Pagination<Repository>>;
+export type SearchFundedReposResult = Result<Pagination<Repository>>;
 
-export const getFundedRepos = async ({
+export const searchFundedRepos = async ({
   sort,
+  languages,
+  licenses,
   limit = 18,
   offset = 0,
-}: GetFundedReposRequest): Promise<GetFundedReposResult> => {
+}: SearchFundedReposRequest): Promise<SearchFundedReposResult> => {
   const searchParams = new URLSearchParams();
 
   if (sort) searchParams.set("sort", sort);
+  if (languages)
+    languages.forEach((language) => {
+      searchParams.append("language", language);
+    });
+  if (licenses)
+    licenses.forEach((license) => {
+      searchParams.append("license", license);
+    });
   if (limit) searchParams.set("limit", limit.toString());
   if (offset) searchParams.set("offset", offset.toString());
 

@@ -3,7 +3,7 @@ import type { NextPage } from "next";
 import type { SearchParamsValue } from "@/utils/search-params";
 import { FilterSort } from "@/components/home/filter-sort";
 import { RepoList } from "@/components/home/repo-list";
-import { getFundedRepos, searchRepos } from "@/lib/api";
+import { searchFundedRepos } from "@/lib/api";
 import { forceArrays } from "@/utils/search-params";
 
 interface DiscoverProps {
@@ -16,23 +16,25 @@ interface DiscoverProps {
 const HomePage: NextPage<DiscoverProps> = async ({ searchParams }) => {
   const _searchParams = forceArrays(await searchParams);
 
+  const [sort] = _searchParams.license ?? [];
   const [lang] = _searchParams.lang ?? [];
   const [license] = _searchParams.license ?? [];
 
   const languages = lang?.split(",");
   const licenses = license?.split(",");
 
-  const searchReposResult = await searchRepos({
+  const searchFundedReposResult = await searchFundedRepos({
+    sort,
     languages,
     licenses,
   });
-  if (!searchReposResult.success)
-    switch (searchReposResult.error) {
+  if (!searchFundedReposResult.success)
+    switch (searchFundedReposResult.error) {
       case "unexpected_error":
         throw new Error("Internal server error");
     }
 
-  const { items: repos, total: _total } = searchReposResult.data;
+  const { items: repos, total: _total } = searchFundedReposResult.data;
 
   return (
     <section className="container mx-auto flex flex-col gap-6">
@@ -43,11 +45,12 @@ const HomePage: NextPage<DiscoverProps> = async ({ searchParams }) => {
 
       <FilterSort
         values={{
+          sort,
           lang: languages,
           license: licenses,
         }}
       />
-      <RepoList initialRepos={repos} findMoreOptions={{ languages, licenses }} />
+      <RepoList initialRepos={repos} findMoreOptions={{ sort, languages, licenses }} />
     </section>
   );
 };
