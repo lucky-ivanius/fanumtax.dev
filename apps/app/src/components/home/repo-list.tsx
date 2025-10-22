@@ -5,7 +5,7 @@ import { useEffect, useState, useTransition } from "react";
 import type { Repository } from "@fanumtax/core/repository";
 import { Button } from "@fanumtax/ui/components/button";
 
-import { getFundedRepos } from "@/lib/api";
+import { searchFundedRepos } from "@/lib/api";
 
 import { RepoCard } from "../repo-card";
 
@@ -31,18 +31,18 @@ export const RepoList: React.FC<RepoListProps> = ({ initialRepos, findMoreOption
 
   const findMoreRepos = () => {
     startTransition(async () => {
-      const getFundedReposResult = await getFundedRepos({
+      const searchFundedReposResult = await searchFundedRepos({
         ...findMoreOptions,
         offset: repos.length,
         limit: defaultLimit,
       });
-      if (!getFundedReposResult.success)
-        switch (getFundedReposResult.error) {
+      if (!searchFundedReposResult.success)
+        switch (searchFundedReposResult.error) {
           case "unexpected_error":
             throw new Error("Internal server error");
         }
 
-      const { items } = getFundedReposResult.data;
+      const { items } = searchFundedReposResult.data;
 
       setRepos((prevRepos) => [...prevRepos, ...items]);
     });
