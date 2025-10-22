@@ -15,7 +15,7 @@ const createChain = <TId extends number, TName extends string>(id: TId, name: TN
   }) as const satisfies Chain;
 
 export const arbitrum = createChain(42161, "Arbitrum One", EVM);
-export const arbitrumSepolia = createChain(421613, "Arbitrum Sepolia", EVM);
+export const arbitrumSepolia = createChain(421614, "Arbitrum Sepolia", EVM);
 
 export const CHAINS = {
   [arbitrum.id]: arbitrum,

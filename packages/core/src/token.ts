@@ -28,15 +28,13 @@ export type ChainToken = {
 };
 
 export const arbitrumTokens = {
-  PYUSD: createToken("PayPal USD", "PYUSD", 18, "0x3c2B8Be99c50593081EAA2A724F0B8285F5aba8f"),
-  USDC: createToken("USD Coin", "USDC", 6, "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8"),
-  USDT: createToken("Tether", "USDT", 6, "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9"),
+  PYUSD: createToken("PayPal USD", "PYUSD", 6, "0x46850aD61C2B7d64d08c9C754F45254596696984"),
+  USDC: createToken("Circle USD", "USDC", 6, "0xaf88d065e77c8cC2239327C5EDb3A432268e5831"),
 } as const satisfies ChainToken;
 
 export const arbitrumSepoliaTokens = {
-  PYUSD: createToken("PayPal USD", "PYUSD", 18, "0xB47e6A5f8b33b3F17603C83a0535A9dcD7E32681"),
-  USDC: createToken("USD Coin", "USDC", 6, "0x07865c6E87B9F70255377e024ace6630C1Eaa37F"),
-  USDT: createToken("Tether", "USDT", 6, "0x07865c6E87B9F70255377e024ace6630C1Eaa37F"),
+  PYUSD: createToken("PayPal USD", "PYUSD", 6, "0x637A1259C6afd7E3AdF63993cA7E58BB438aB1B1"),
+  USDC: createToken("Circle USD", "USDC", 6, "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d"),
 } as const satisfies ChainToken;
 
 export const CHAIN_TOKENS = {
