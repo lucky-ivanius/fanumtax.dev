@@ -148,7 +148,6 @@ export const createGithubRepositoryAdapter = (accessToken: string): RepositoryAd
                   ... on Issue {
                     number
                     title
-                    body
                     labels(first: 10) {
                       nodes {
                         name
@@ -156,11 +155,7 @@ export const createGithubRepositoryAdapter = (accessToken: string): RepositoryAd
                       }
                     }
                     state
-                    author {
-                      login
-                      avatarUrl
-                      url
-                    }
+                    createdAt
                   }
                 }
                 issueCount
@@ -182,16 +177,9 @@ export const createGithubRepositoryAdapter = (accessToken: string): RepositoryAd
             return {
               number: node.number,
               title: node.title,
-              body: node.body,
               state: "open", // Handled by query string
-              author: node.author
-                ? {
-                    username: node.author.login,
-                    avatarUrl: node.author.avatarUrl,
-                    url: node.author.url,
-                  }
-                : null,
-              labels: labels.map(({ name, color }) => ({ name, color })),
+              labels: labels.map(({ name, color }) => ({ name, color: `#${color}` })),
+              createdAt: new Date(node.createdAt).getTime(),
             } satisfies ExternalIssue;
           }),
           total: results.search.issueCount,

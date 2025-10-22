@@ -16,10 +16,15 @@ export interface IssueAuthor {
 export interface Issue {
   number: number;
   title: string;
-  body: string;
   state: IssueState;
-  author: IssueAuthor | null;
   labels: IssueLabel[];
 
   bounty: Bounty | null;
+
+  createdAt: number;
+}
+
+export interface IssueDetail extends Issue {
+  body: string;
+  author: IssueAuthor | null;
 }
