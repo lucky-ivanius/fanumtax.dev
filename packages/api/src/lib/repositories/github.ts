@@ -149,6 +149,12 @@ export const createGithubRepositoryAdapter = (accessToken: string): RepositoryAd
                     number
                     title
                     body
+                    labels(first: 10) {
+                      nodes {
+                        name
+                        color
+                      }
+                    }
                     state
                     author {
                       login
@@ -170,22 +176,24 @@ export const createGithubRepositoryAdapter = (accessToken: string): RepositoryAd
         );
 
         return ok({
-          items: results.search.nodes.map(
-            (node) =>
-              ({
-                number: node.number,
-                title: node.title,
-                body: node.body,
-                state: "open", // Handled by query string
-                author: node.author
-                  ? {
-                      username: node.author.login,
-                      avatarUrl: node.author.avatarUrl,
-                      url: node.author.url,
-                    }
-                  : null,
-              }) satisfies ExternalIssue
-          ),
+          items: results.search.nodes.map((node) => {
+            const labels = (node.labels?.nodes ?? []).filter(Boolean);
+
+            return {
+              number: node.number,
+              title: node.title,
+              body: node.body,
+              state: "open", // Handled by query string
+              author: node.author
+                ? {
+                    username: node.author.login,
+                    avatarUrl: node.author.avatarUrl,
+                    url: node.author.url,
+                  }
+                : null,
+              labels: labels.map(({ name, color }) => ({ name, color })),
+            } satisfies ExternalIssue;
+          }),
           total: results.search.issueCount,
         });
       } catch (error) {
