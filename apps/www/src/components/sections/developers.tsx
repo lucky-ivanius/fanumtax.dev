@@ -57,7 +57,7 @@ const Developers: React.FC = () => {
             size="xl"
             className="border-2 border-primary font-medium text-lg transition-all duration-100 hover:bg-background hover:text-primary active:translate-x-0.5 active:translate-y-0.5"
           >
-            <a href="/app">Start Building</a>
+            <a href={import.meta.env.VITE_APP_URL ?? "/app"}>Start Building</a>
           </Button>
         </div>
         <CodeBlock code={codeSample} language="ts" filename="index.ts" className="hidden shadow md:block" />

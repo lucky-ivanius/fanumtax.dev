@@ -90,7 +90,7 @@ const Funders: React.FC = () => (
           size="xl"
           className="border-2 border-warning bg-warning font-medium text-lg transition-all duration-100 hover:bg-background hover:text-warning active:translate-x-0.5 active:translate-y-0.5"
         >
-          <a href="/app">Fund Project</a>
+          <a href={import.meta.env.VITE_APP_URL ?? "/app"}>Fund Project</a>
         </Button>
       </div>
     </div>

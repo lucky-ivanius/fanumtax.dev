@@ -1,0 +1,7 @@
+@import "@fanumtax/ui";
+
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+}

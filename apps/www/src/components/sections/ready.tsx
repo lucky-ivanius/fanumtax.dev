@@ -44,14 +44,14 @@ const Ready: React.FC = () => {
               size="xl"
               className="border-2 border-secondary bg-secondary font-medium text-lg text-primary transition-all duration-100 hover:bg-primary hover:text-secondary active:translate-x-0.5 active:translate-y-0.5"
             >
-              <a href="/app">Start Building</a>
+              <a href={import.meta.env.VITE_APP_URL ?? "/app"}>Start Building</a>
             </Button>
             <Button
               asChild
               size="xl"
               className="border-2 border-secondary font-medium text-lg transition-all duration-100 hover:bg-secondary hover:text-primary active:translate-x-0.5 active:translate-y-0.5"
             >
-              <a href="/app">Fund Project</a>
+              <a href={import.meta.env.VITE_APP_URL ?? "/app"}>Fund Project</a>
             </Button>
           </div>
         </div>

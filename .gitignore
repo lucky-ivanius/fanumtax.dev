@@ -1,6 +1,9 @@
 # dependencies (bun install)
 node_modules
 
+# wrangler
+.wrangler
+
 # output
 out
 dist
@@ -26,6 +29,10 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 .eslintcache
 .cache
 *.tsbuildinfo
+
+# next.js
+.next
+next-env.d.ts
 
 # IntelliJ based IDEs
 .idea

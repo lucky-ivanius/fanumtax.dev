@@ -1,0 +1,14 @@
+{
+  "name": "@fanumtax/core",
+  "module": "src/index.ts",
+  "type": "module",
+  "exports": {
+    "./*": "./src/*.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

@@ -19,7 +19,7 @@ const Hero: React.FC = () => (
             size="xl"
             className="border-2 border-primary font-medium text-lg transition-all duration-100 hover:bg-background hover:text-primary active:translate-x-0.5 active:translate-y-0.5"
           >
-            <a href="/app">Start Building</a>
+            <a href={import.meta.env.VITE_APP_URL ?? "/app"}>Start Building</a>
           </Button>
           <Button
             asChild
@@ -27,7 +27,7 @@ const Hero: React.FC = () => (
             size="xl"
             className="border-2 border-border bg-background font-medium text-lg transition-all duration-100 hover:border-primary hover:text-primary active:translate-x-0.5 active:translate-y-0.5"
           >
-            <a href="/app">Fund Project</a>
+            <a href={import.meta.env.VITE_APP_URL ?? "/app"}>Fund Project</a>
           </Button>
         </div>
       </div>
