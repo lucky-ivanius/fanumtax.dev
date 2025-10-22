@@ -99,7 +99,7 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({ defaultOpen = false,
               name="lang"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Skills</FormLabel>
+                  <FormLabel>Languages</FormLabel>
                   <FormControl>
                     <MultiSelect {...field}>
                       <MultiSelectTrigger className="w-full">

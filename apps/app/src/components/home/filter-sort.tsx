@@ -68,7 +68,7 @@ export const FilterSort: React.FC<FilterSortProps> = ({ values }) => {
             name="lang"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Skills</FormLabel>
+                <FormLabel>Languages</FormLabel>
                 <FormControl>
                   <MultiSelect {...field}>
                     <MultiSelectTrigger className="w-full">
