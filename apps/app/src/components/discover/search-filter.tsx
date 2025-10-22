@@ -17,15 +17,14 @@ import {
   MultiSelectTrigger,
   MultiSelectValue,
 } from "@fanumtax/ui/components/multi-select";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@fanumtax/ui/components/select";
 import { cn } from "@fanumtax/utils/class-name";
 
-import { LANG_OPTIONS, SORT_OPTIONS } from "@/config/consts";
+import { LANGUAGE_OPTIONS, LICENSE_OPTIONS } from "@/config/consts";
 
 const searchFilterFormSchema = z.object({
   q: z.string().optional(),
   lang: z.array(z.string()).optional(),
-  sort: z.string().optional(),
+  license: z.array(z.string()).optional(),
 });
 
 type SearchFilterFormData = z.infer<typeof searchFilterFormSchema>;
@@ -47,16 +46,16 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({ defaultOpen = false,
     values: {
       q: values.q ?? "",
       lang: values.lang ?? [],
-      sort: values.sort ?? "",
+      license: values.license ?? [],
     },
   });
 
-  const onSubmit = ({ q, lang, sort }: SearchFilterFormData) => {
+  const onSubmit = ({ q, lang, license }: SearchFilterFormData) => {
     const searchParams = new URLSearchParams();
 
     if (q) searchParams.set("q", q);
     if (lang?.length) searchParams.set("lang", lang.join(","));
-    if (sort) searchParams.set("sort", sort);
+    if (license?.length) searchParams.set("license", license.join(","));
 
     startTransition(() => {
       router.push(`${pathname}?${searchParams.toString()}`);
@@ -114,7 +113,7 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({ defaultOpen = false,
                           emptyMessage: "No languages found",
                         }}
                       >
-                        {LANG_OPTIONS.map(({ value, label }) => (
+                        {LANGUAGE_OPTIONS.map(({ value, label }) => (
                           <MultiSelectItem key={value} value={value}>
                             {label}
                           </MultiSelectItem>
@@ -127,51 +126,52 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({ defaultOpen = false,
             />
             <FormField
               control={form.control}
-              name="sort"
+              name="license"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Sort by</FormLabel>
+                  <FormLabel>Licenses</FormLabel>
                   <FormControl>
-                    <Select {...field} onValueChange={field.onChange}>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Sort by" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {SORT_OPTIONS.map(({ value, label }) => (
-                          <SelectItem key={value} value={value}>
+                    <MultiSelect {...field}>
+                      <MultiSelectTrigger className="w-full">
+                        <MultiSelectValue
+                          formatSelected={(selectedValues) => `${selectedValues.size} licenses selected`}
+                          placeholder="Select licenses..."
+                        />
+                      </MultiSelectTrigger>
+                      <MultiSelectContent
+                        search={{
+                          emptyMessage: "No licenses found",
+                        }}
+                      >
+                        {LICENSE_OPTIONS.map(({ value, label }) => (
+                          <MultiSelectItem key={value} value={value}>
                             {label}
-                          </SelectItem>
+                          </MultiSelectItem>
                         ))}
-                      </SelectContent>
-                    </Select>
+                      </MultiSelectContent>
+                    </MultiSelect>
                   </FormControl>
                 </FormItem>
               )}
             />
           </div>
 
-          <div className="flex items-center justify-end gap-4 md:flex-row-reverse md:justify-end">
-            {/* <Button
-              type="button"
-              variant="secondary"
-              disabled={isLoading}
-              onClick={() => {
-                form.reset({
-                  q: "",
-                  lang: [],
-                  sort: "",
-                });
-
-                form.handleSubmit(onSubmit)();
-              }}
-            >
-              Clear
-            </Button> */}
-
-            <Button type="submit" disabled={isLoading} className="flex-1 md:flex-none">
-              {isLoading && <Loader2Icon className="animate-spin" />}
-              {isLoading ? "Searching" : "Apply"}
+          <div className="flex flex-col items-center gap-4 md:flex-row">
+            <Button type="submit" disabled={isLoading} className="w-full md:w-min">
+              {isLoading ? (
+                <>
+                  <span className="flex items-center gap-2 md:hidden">
+                    <Loader2Icon className="animate-spin" /> Searching...
+                  </span>
+                  <span className="hidden items-center gap-2 md:inline-flex">Apply</span>
+                </>
+              ) : (
+                <span>Apply</span>
+              )}
             </Button>
+            {isLoading && (
+              <span className="hidden items-center text-muted-foreground text-sm md:inline-flex">Searching...</span>
+            )}
           </div>
         </form>
       </Form>
