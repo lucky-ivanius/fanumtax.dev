@@ -218,13 +218,24 @@ reposHandlers
           totalBountyUsd: 0,
         } satisfies Repository;
 
-        await db.insert(tables.repositories).values({
-          platform: "github",
-          ...repo,
-          license: repo.license?.key,
-          language: repo.language?.name,
-          totalBountyUsd: 0,
-        });
+        await db
+          .insert(tables.repositories)
+          .values({
+            platform: "github",
+            ...repo,
+            license: repo.license?.key,
+            language: repo.language?.name,
+            totalBountyUsd: 0, // TODO: Update total bounty
+          })
+          .onConflictDoUpdate({
+            target: [tables.repositories.platform, tables.repositories.owner, tables.repositories.name],
+            set: {
+              ...repo,
+              license: repo.license?.key,
+              language: repo.language?.name,
+              totalBountyUsd: 0, // TODO: Update total bounty
+            },
+          });
 
         return ok<typeof c, Repository>(c, repo);
       }

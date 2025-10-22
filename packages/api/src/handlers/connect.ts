@@ -63,13 +63,16 @@ connectHandlers.post(
 
     const githubUser = getCurrentUserResult.data;
 
-    await db.insert(tables.connections).values({
-      type: "github",
-      externalUserId: githubUser.id,
-      externalUsername: githubUser.username,
-      token: accessToken,
-      userId: c.var.auth.sub,
-    });
+    await db
+      .insert(tables.connections)
+      .values({
+        type: "github",
+        externalUserId: githubUser.id,
+        externalUsername: githubUser.username,
+        token: accessToken,
+        userId: c.var.auth.sub,
+      })
+      .onConflictDoNothing({ target: [tables.connections.userId, tables.connections.type] });
 
     return ok(c);
   }
