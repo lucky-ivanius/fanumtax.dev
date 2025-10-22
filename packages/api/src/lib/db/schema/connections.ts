@@ -1,10 +1,10 @@
-import { index, sqliteTable, text, unique } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, unique, uniqueIndex } from "drizzle-orm/sqlite-core";
 import { v7 } from "uuid";
 
 import { timestamps } from "../timestamps";
 import { users } from "./users";
 
-export const connectionTypes = ["github"] as const;
+export const connectionProviders = ["github"] as const;
 
 export const connections = sqliteTable(
   "connections",
@@ -13,7 +13,7 @@ export const connections = sqliteTable(
       .primaryKey()
       .$defaultFn(() => v7()),
 
-    type: text("type", { enum: connectionTypes }).notNull(),
+    provider: text("provider", { enum: connectionProviders }).notNull(),
     externalUserId: text("external_user_id").notNull(),
     externalUsername: text("external_username").notNull(),
 
@@ -21,12 +21,12 @@ export const connections = sqliteTable(
 
     userId: text("user_id")
       .notNull()
-      .references(() => users.id),
+      .references(() => users.id, { onDelete: "cascade" }),
 
     ...timestamps,
   },
   (t) => [
-    index("connections_index_user_id_type").on(t.userId, t.type),
-    unique("connections_unique_user_id_type_external_user_id").on(t.userId, t.type, t.externalUserId),
+    uniqueIndex("connections_unique_index_user_id_provider").on(t.userId, t.provider),
+    unique("connections_unique_provider_external_user_id").on(t.provider, t.externalUserId),
   ]
 );
