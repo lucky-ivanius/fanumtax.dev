@@ -5,7 +5,7 @@ import { Hono } from "hono";
 import { validator } from "hono/validator";
 import { createPublicClient, http, isAddress, isHex } from "viem";
 import { generateSiweNonce, parseSiweMessage } from "viem/siwe";
-import z from "zod";
+import { z } from "zod";
 
 import type { Env } from "../env";
 import * as tables from "../lib/db/schema";

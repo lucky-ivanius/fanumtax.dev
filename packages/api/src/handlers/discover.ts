@@ -2,7 +2,7 @@ import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/d1";
 import { Hono } from "hono";
 import { validator } from "hono/validator";
-import z from "zod";
+import { z } from "zod";
 
 import type { Pagination } from "@fanumtax/core/pagination";
 import type { Repository } from "@fanumtax/core/repository";

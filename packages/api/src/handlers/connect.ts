@@ -2,7 +2,7 @@ import { and, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/d1";
 import { Hono } from "hono";
 import { validator } from "hono/validator";
-import z from "zod";
+import { z } from "zod";
 
 import type { Env } from "../env";
 import { createGithubConnectionAdapter } from "../lib/connections/github";

@@ -2,7 +2,7 @@ import { and, asc, desc, eq, gt, inArray, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/d1";
 import { Hono } from "hono";
 import { validator } from "hono/validator";
-import z from "zod";
+import { z } from "zod";
 
 import type { LanguageName } from "@fanumtax/core/language";
 import type { LicenseKey } from "@fanumtax/core/license";
