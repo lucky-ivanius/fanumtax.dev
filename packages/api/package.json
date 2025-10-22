@@ -8,9 +8,18 @@
     "cf-typegen": "wrangler types --env-interface CloudflareBindings"
   },
   "dependencies": {
-    "hono": "^4.9.10"
+    "@fanumtax/core": "workspace:*",
+    "@fanumtax/utils": "workspace:*",
+    "@octokit/graphql-schema": "^15.26.0",
+    "drizzle-orm": "^0.44.6",
+    "hono": "^4.9.10",
+    "octokit": "^5.0.4",
+    "uuid": "^13.0.0",
+    "viem": "^2.38.3",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
+    "drizzle-kit": "^0.31.5",
     "wrangler": "^4.4.0"
   }
 }
