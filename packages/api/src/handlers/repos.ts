@@ -123,7 +123,7 @@ reposHandlers
           case "lowest_bounty":
             return [asc(tables.repositories.totalBountyUsd), desc(tables.repositories.stars)];
           case "forks":
-            return [desc(tables.repositories.stars), asc(tables.repositories.owner), asc(tables.repositories.name)];
+            return [desc(tables.repositories.forks), asc(tables.repositories.owner), asc(tables.repositories.name)];
           default:
             return [desc(tables.repositories.stars), asc(tables.repositories.owner), asc(tables.repositories.name)];
         }
