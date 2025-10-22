@@ -17,7 +17,7 @@ export const repositories = sqliteTable(
     owner: text("owner").notNull(),
     name: text("name").notNull(),
 
-    description: text("description").notNull(),
+    description: text("description").notNull().default(""),
 
     url: text("url").notNull(),
 

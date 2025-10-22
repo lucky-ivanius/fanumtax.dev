@@ -22,6 +22,13 @@
       "when": 1761166375685,
       "tag": "0002_rename-type-to-providers-on-connections-table",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1761166518698,
+      "tag": "0003_add-default-to-repository-description",
+      "breakpoints": true
     }
   ]
 }
