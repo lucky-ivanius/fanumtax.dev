@@ -1,8 +1,9 @@
+import { formatRelative } from "date-fns";
 import Link from "next/link";
 
 import type { Issue } from "@fanumtax/core/issue";
 import { Badge } from "@fanumtax/ui/components/badge";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@fanumtax/ui/components/card";
+import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@fanumtax/ui/components/card";
 
 interface IssueCardProps {
   owner: string;
@@ -16,9 +17,9 @@ export const IssueCard: React.FC<IssueCardProps> = ({ owner, repo, issue }) => {
   return (
     <Card className="relative h-full border shadow-none transition-all hover:border-primary active:border-primary">
       <CardHeader>
-        <CardTitle className="text-lg">
+        <CardTitle className="line-clamp-2">
           <Link
-            href={`/${owner}/${repo}/issue/${number}`}
+            href={`/${owner}/${repo}/issues/${number}`}
             className="after:absolute after:inset-0 after:z-0 after:content-['']"
           >
             {title}
@@ -42,9 +43,7 @@ export const IssueCard: React.FC<IssueCardProps> = ({ owner, repo, issue }) => {
         </CardDescription>
       </CardHeader>
       <CardFooter>
-        <div className="flex items-center gap-2">
-          <span className="text-muted-foreground text-sm">{new Date(createdAt).toLocaleString()}</span>
-        </div>
+        <span className="text-muted-foreground text-sm">Opened {formatRelative(createdAt, new Date())}</span>
       </CardFooter>
     </Card>
   );
