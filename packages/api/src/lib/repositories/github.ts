@@ -75,7 +75,8 @@ export const createGithubRepositoryAdapter = (accessToken: string): RepositoryAd
         return ok({
           number: issue.number,
           title: issue.title,
-          state: issue.state === "OPEN" ? "open" : "closed",
+          state: issue.state as ExternalIssue["state"],
+          url: issue.html_url,
           labels: issue.labels.reduce(
             (acc, label) => {
               if (typeof label === "string") {
@@ -88,7 +89,7 @@ export const createGithubRepositoryAdapter = (accessToken: string): RepositoryAd
 
               acc.push({
                 name: label.name ?? "Unknown",
-                color: label.color ?? DEFAULT_ISSUE_LABEL_COLOR,
+                color: label.color ? `#${label.color}` : DEFAULT_ISSUE_LABEL_COLOR,
               });
 
               return acc;
@@ -215,6 +216,7 @@ export const createGithubRepositoryAdapter = (accessToken: string): RepositoryAd
                         color
                       }
                     }
+                    url
                     state
                     createdAt
                   }
@@ -239,6 +241,7 @@ export const createGithubRepositoryAdapter = (accessToken: string): RepositoryAd
               number: node.number,
               title: node.title,
               state: "open", // Handled by query string
+              url: node.url,
               labels: labels.map(({ name, color }) => ({ name, color: `#${color}` })),
               createdAt: new Date(node.createdAt).getTime(),
             } satisfies ExternalIssue;
