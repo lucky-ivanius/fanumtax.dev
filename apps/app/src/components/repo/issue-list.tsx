@@ -63,7 +63,9 @@ export const IssueList: React.FC<IssueListProps> = ({ owner, repo, initialIssues
         </div>
       ) : (
         <div className="flex w-full flex-col items-center justify-center gap-4 py-12">
-          <h2 className="text-center text-3xl text-foreground">{isSearch ? "No issues found" : "All Clear!"}</h2>
+          <h2 className="text-center font-bold text-3xl text-foreground">
+            {isSearch ? "No issues found" : "All Clear!"}
+          </h2>
           {isSearch ? (
             <p className="text-center text-muted-foreground text-sm">
               We couldn't find any issues that match your search criteria.

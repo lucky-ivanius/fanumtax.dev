@@ -54,7 +54,7 @@ export const RepoList: React.FC<RepoListProps> = ({ initialRepos, findMoreOption
         </div>
       ) : (
         <div className="flex w-full flex-col items-center justify-center gap-4 py-12">
-          <h2 className="text-center text-3xl text-foreground">No results</h2>
+          <h2 className="text-center font-bold text-3xl text-foreground">No results</h2>
           <p className="text-center text-muted-foreground text-sm">
             We couldn't find any repositories that match your search criteria.
           </p>
