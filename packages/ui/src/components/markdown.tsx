@@ -3,6 +3,7 @@
 import ReactMarkdown, { type Components } from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import rehypeRaw from "rehype-raw";
+import rehypeSanitize from "rehype-sanitize";
 import remarkGfm from "remark-gfm";
 import "highlight.js/styles/github-dark.css";
 
@@ -43,7 +44,11 @@ export const Markdown: React.FC<MarkdownProps> = ({ content }) => {
 
   return (
     <div className="space-y-4">
-      <ReactMarkdown remarkPlugins={[remarkGfm]} components={components} rehypePlugins={[rehypeRaw, rehypeHighlight]}>
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        components={components}
+        rehypePlugins={[rehypeRaw, rehypeSanitize, rehypeHighlight]}
+      >
         {content}
       </ReactMarkdown>
     </div>
