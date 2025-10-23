@@ -106,12 +106,9 @@ const RepoPage: NextPage<RepoPageProps> = async ({ params, searchParams }) => {
       <Separator />
 
       <div className="flex flex-col gap-4">
-        <SearchFilter defaultOpen={!!Object.keys(_searchParams).length} values={{ q }} />
+        <h2 className="font-semibold text-foreground text-xl">Issues</h2>
 
-        <div className="flex items-center gap-4 md:mt-4">
-          <h2 className="font-semibold text-foreground text-xl">Open Issues</h2>
-          <Badge>{compactFormatter().format(totalIssues).toLocaleLowerCase()}</Badge>
-        </div>
+        <SearchFilter defaultOpen={!!Object.keys(_searchParams).length} values={{ q }} />
 
         <IssueList owner={_params.owner} repo={_params.name} initialIssues={issues} findMoreOptions={{ q }} />
       </div>
