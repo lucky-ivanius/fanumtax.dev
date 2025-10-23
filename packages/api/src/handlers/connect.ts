@@ -40,7 +40,7 @@ connectHandlers.post(
     const [connectedGithub] = await db
       .select()
       .from(tables.connections)
-      .where(and(eq(tables.connections.type, "github"), eq(tables.connections.userId, c.var.auth.sub)));
+      .where(and(eq(tables.connections.provider, "github"), eq(tables.connections.userId, c.var.auth.sub)));
     if (connectedGithub)
       return badRequest(c, { error: "github_already_connected", message: "GitHub is already connected" });
 
@@ -66,13 +66,13 @@ connectHandlers.post(
     await db
       .insert(tables.connections)
       .values({
-        type: "github",
+        provider: "github",
         externalUserId: githubUser.id,
         externalUsername: githubUser.username,
         token: accessToken,
         userId: c.var.auth.sub,
       })
-      .onConflictDoNothing({ target: [tables.connections.userId, tables.connections.type] });
+      .onConflictDoNothing({ target: [tables.connections.userId, tables.connections.provider] });
 
     return ok(c);
   }
