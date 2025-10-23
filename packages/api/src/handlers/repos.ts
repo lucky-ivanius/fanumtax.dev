@@ -4,7 +4,7 @@ import { Hono } from "hono";
 import { validator } from "hono/validator";
 import { z } from "zod";
 
-import type { Issue } from "@fanumtax/core/issue";
+import type { Issue, IssueDetail } from "@fanumtax/core/issue";
 import type { LanguageName } from "@fanumtax/core/language";
 import type { LicenseKey } from "@fanumtax/core/license";
 import type { Pagination } from "@fanumtax/core/pagination";
@@ -208,14 +208,7 @@ reposHandlers
         const githubRepo = searchRepositoriesResult.data;
 
         const repo = {
-          owner: githubRepo.owner,
-          name: githubRepo.name,
-          description: githubRepo.description,
-          url: githubRepo.url,
-          stars: githubRepo.stars,
-          forks: githubRepo.forks,
-          license: githubRepo.license,
-          language: githubRepo.language,
+          ...githubRepo,
           totalBountyUsd: 0,
         } satisfies Repository;
 
@@ -325,6 +318,48 @@ reposHandlers
         })),
         total,
       });
+    }
+  )
+  .get(
+    "/github/:owner/:name/issues/:number",
+    authMiddleware({
+      verify: async (token, c) => verify(token, c.env.JWT_SECRET),
+      optional: true,
+    }),
+    async (c) => {
+      const { owner, name, number } = c.req.param();
+
+      const issueNumber = parseInt(number, 10);
+      if (Number.isNaN(issueNumber))
+        return notFound(c, { error: "issue_not_found", message: `Issue ${owner}/${name} #${number} not found` });
+
+      const db = drizzle(c.env.D1);
+
+      const [connectedGithub] = c.var.auth
+        ? await db.select().from(tables.connections).where(eq(tables.connections.userId, c.var.auth.sub))
+        : [null];
+
+      const githubRepositoryDiscovery = createGithubRepositoryAdapter(
+        connectedGithub?.token ?? c.env.GITHUB_DEFAULT_ACCESS_TOKEN
+      );
+      const getIssueResult = await githubRepositoryDiscovery.getIssue(owner, name, issueNumber);
+      if (!getIssueResult.success) {
+        switch (getIssueResult.error) {
+          case "issue_not_found":
+            return notFound(c, { error: "issue_not_found", message: `Issue ${owner}/${name} #${number} not found` });
+          case "unexpected_error":
+            return unexpectedError(c);
+        }
+      }
+
+      const githubIssue = getIssueResult.data;
+
+      const issueDetail = {
+        ...githubIssue,
+        bounty: null, // TODO: Get bounty from blockchain
+      } satisfies IssueDetail;
+
+      return ok<typeof c, IssueDetail>(c, issueDetail);
     }
   );
 
