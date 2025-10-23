@@ -28,3 +28,5 @@ export interface IssueDetail extends Issue {
   body: string;
   author: IssueAuthor | null;
 }
+
+export const DEFAULT_ISSUE_LABEL_COLOR = "#6a737d";

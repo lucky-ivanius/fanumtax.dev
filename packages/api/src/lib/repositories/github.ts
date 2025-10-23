@@ -3,11 +3,17 @@ import { Octokit, RequestError } from "octokit";
 
 import type { LanguageName } from "@fanumtax/core/language";
 import type { LicenseKey } from "@fanumtax/core/license";
+import { DEFAULT_ISSUE_LABEL_COLOR } from "@fanumtax/core/issue";
 import { DEFAULT_LANGUAGE_COLOR, LANGUAGE_LIST, LANGUAGES } from "@fanumtax/core/language";
 import { LICENSE_LIST, LICENSES } from "@fanumtax/core/license";
 import { err, ok } from "@fanumtax/utils/result";
 
-import type { ExternalIssue, ExternalRepository, RepositoryAdapter } from "../../interfaces/repository-adapter";
+import type {
+  ExternalIssue,
+  ExternalIssueDetail,
+  ExternalRepository,
+  RepositoryAdapter,
+} from "../../interfaces/repository-adapter";
 
 export const createGithubRepositoryAdapter = (accessToken: string): RepositoryAdapter => {
   const octokit = new Octokit({
@@ -49,6 +55,61 @@ export const createGithubRepositoryAdapter = (accessToken: string): RepositoryAd
           switch (error.status) {
             case 404:
               return err("repo_not_found", "Repository not found");
+            default:
+              return err("unexpected_error", "Unexpected error");
+          }
+
+        return err("unexpected_error", (error as Error).message);
+      }
+    },
+    getIssue: async (owner, name, number) => {
+      try {
+        const issueResponse = await octokit.rest.issues.get({
+          owner,
+          repo: name,
+          issue_number: number,
+        });
+
+        const issue = issueResponse.data;
+
+        return ok({
+          number: issue.number,
+          title: issue.title,
+          state: issue.state === "OPEN" ? "open" : "closed",
+          labels: issue.labels.reduce(
+            (acc, label) => {
+              if (typeof label === "string") {
+                acc.push({ name: label, color: DEFAULT_ISSUE_LABEL_COLOR });
+
+                return acc;
+              }
+
+              if (!label) return acc;
+
+              acc.push({
+                name: label.name ?? "Unknown",
+                color: label.color ?? DEFAULT_ISSUE_LABEL_COLOR,
+              });
+
+              return acc;
+            },
+            [] as ExternalIssue["labels"]
+          ),
+          createdAt: new Date(issue.created_at).getTime(),
+          body: issue.body ?? "",
+          author: issue.user
+            ? {
+                username: issue.user.login,
+                avatarUrl: issue.user.avatar_url,
+                url: issue.user.html_url,
+              }
+            : null,
+        } satisfies ExternalIssueDetail);
+      } catch (error) {
+        if (error instanceof RequestError)
+          switch (error.status) {
+            case 404:
+              return err("issue_not_found", "Issue not found");
             default:
               return err("unexpected_error", "Unexpected error");
           }
