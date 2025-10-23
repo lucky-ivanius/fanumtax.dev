@@ -9,6 +9,9 @@ export interface Bounty {
   token: Token;
   amount: string; // in hex string
 
+  /* Bounty */
+  deadline: number | null;
+
   /* User */
   createdBy: string;
 }

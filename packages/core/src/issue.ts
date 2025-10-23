@@ -2,17 +2,33 @@ import type { Bounty } from "./bounty";
 
 export type IssueState = "open" | "closed";
 
-export interface Issue {
-  /* Repository */
-  owner: string;
-  repo: string;
+export type IssueLabel = {
+  name: string;
+  color: string;
+};
 
-  /* Issue */
+export interface IssueAuthor {
+  username: string;
+  avatarUrl: string;
+  url: string;
+}
+
+export interface Issue {
   number: number;
   title: string;
-  body: string;
   state: IssueState;
+  labels: IssueLabel[];
 
-  /* Bounty */
-  bounty: Bounty;
+  url: string;
+
+  bounty: Bounty | null;
+
+  createdAt: number;
 }
+
+export interface IssueDetail extends Issue {
+  body: string;
+  author: IssueAuthor | null;
+}
+
+export const DEFAULT_ISSUE_LABEL_COLOR = "#6a737d";

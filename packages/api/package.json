@@ -20,6 +20,6 @@
   },
   "devDependencies": {
     "drizzle-kit": "^0.31.5",
-    "wrangler": "^4.4.0"
+    "wrangler": "^4.44.0"
   }
 }

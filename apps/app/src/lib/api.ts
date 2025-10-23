@@ -1,3 +1,4 @@
+import type { Issue, IssueDetail } from "@fanumtax/core/issue";
 import type { Pagination } from "@fanumtax/core/pagination";
 import type { Repository } from "@fanumtax/core/repository";
 import type { Result } from "@fanumtax/utils/result";
@@ -27,6 +28,29 @@ export const getRepo = async (
     }
     case 404:
       return err("repo_not_found", "Repository not found");
+    default:
+      return err("unexpected_error", "Unexpected error");
+  }
+};
+
+export type GetIssueResult = Result<IssueDetail, "issue_not_found">;
+
+export const getIssue = async (
+  owner: string,
+  name: string,
+  number: number,
+  platform: PlatformName = "github"
+): Promise<GetIssueResult> => {
+  const res = await fetch(`${API_URL}/v1/repos/${platform}/${owner}/${name}/issues/${number}`);
+
+  switch (res.status) {
+    case 200: {
+      const issue = (await res.json()) as IssueDetail;
+
+      return ok(issue);
+    }
+    case 404:
+      return err("issue_not_found", "Issue not found");
     default:
       return err("unexpected_error", "Unexpected error");
   }
@@ -112,6 +136,44 @@ export const searchRepos = async ({
   switch (res.status) {
     case 200: {
       const result = (await res.json()) as Pagination<Repository>;
+
+      return ok(result);
+    }
+    default:
+      return err("unexpected_error", "Unexpected error");
+  }
+};
+
+export type SearchIssuesRequest = {
+  platform: PlatformName;
+  owner: string;
+  repo: string;
+  q?: string;
+  limit?: number;
+  offset?: number;
+};
+
+export type SearchIssuesResult = Result<Pagination<Issue>>;
+
+export const searchIssues = async ({
+  platform = "github",
+  owner,
+  repo,
+  q,
+  limit = 15,
+  offset = 0,
+}: SearchIssuesRequest): Promise<SearchIssuesResult> => {
+  const searchParams = new URLSearchParams();
+
+  if (q) searchParams.set("q", q);
+  if (limit) searchParams.set("limit", limit.toString());
+  if (offset) searchParams.set("offset", offset.toString());
+
+  const res = await fetch(`${API_URL}/v1/repos/${platform}/${owner}/${repo}/issues?${searchParams.toString()}`);
+
+  switch (res.status) {
+    case 200: {
+      const result = (await res.json()) as Pagination<Issue>;
 
       return ok(result);
     }
