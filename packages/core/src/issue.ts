@@ -19,6 +19,8 @@ export interface Issue {
   state: IssueState;
   labels: IssueLabel[];
 
+  url: string;
+
   bounty: Bounty | null;
 
   createdAt: number;
