@@ -79,6 +79,7 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({ defaultOpen = false,
         >
           <FormField
             control={form.control}
+            disabled={isLoading}
             name="q"
             render={({ field }) => (
               <FormItem>
@@ -96,6 +97,7 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({ defaultOpen = false,
           <div className="grid grid-cols-1 gap-6 md:grid-cols-4 md:gap-4">
             <FormField
               control={form.control}
+              disabled={isLoading}
               name="lang"
               render={({ field }) => (
                 <FormItem>
@@ -126,6 +128,7 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({ defaultOpen = false,
             />
             <FormField
               control={form.control}
+              disabled={isLoading}
               name="license"
               render={({ field }) => (
                 <FormItem>
