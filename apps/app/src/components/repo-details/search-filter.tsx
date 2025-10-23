@@ -8,18 +8,9 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@fanumtax/ui/components/button";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "@fanumtax/ui/components/form";
+import { Form, FormControl, FormField, FormItem } from "@fanumtax/ui/components/form";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@fanumtax/ui/components/input-group";
-import {
-  MultiSelect,
-  MultiSelectContent,
-  MultiSelectItem,
-  MultiSelectTrigger,
-  MultiSelectValue,
-} from "@fanumtax/ui/components/multi-select";
 import { cn } from "@fanumtax/utils/class-name";
-
-import { LANGUAGE_OPTIONS, LICENSE_OPTIONS } from "@/config/consts";
 
 const searchFilterFormSchema = z.object({
   q: z.string().optional(),
@@ -67,12 +58,10 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({ defaultOpen = false,
         <ChevronDown className={cn("transform transition-transform", open && "rotate-180")} />
       </Button>
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className={cn("flex flex-col gap-6 bg-card p-6 shadow", !open && "hidden", "md:flex")}
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className={cn("flex flex-col", !open && "hidden", "md:flex")}>
           <FormField
             control={form.control}
+            disabled={isLoading}
             name="q"
             render={({ field }) => (
               <FormItem>
@@ -87,25 +76,6 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({ defaultOpen = false,
               </FormItem>
             )}
           />
-          {/* <div className="grid grid-cols-1 gap-6 md:grid-cols-4 md:gap-4"></div> */}
-
-          <div className="flex flex-col items-center gap-4 md:flex-row">
-            <Button type="submit" disabled={isLoading} className="w-full md:w-min">
-              {isLoading ? (
-                <>
-                  <span className="flex items-center gap-2 md:hidden">
-                    <Loader2Icon className="animate-spin" /> Searching...
-                  </span>
-                  <span className="hidden items-center gap-2 md:inline-flex">Search</span>
-                </>
-              ) : (
-                <span>Search</span>
-              )}
-            </Button>
-            {isLoading && (
-              <span className="hidden items-center text-muted-foreground text-sm md:inline-flex">Searching...</span>
-            )}
-          </div>
         </form>
       </Form>
     </div>
