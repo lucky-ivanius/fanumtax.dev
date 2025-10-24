@@ -4,7 +4,7 @@ pragma solidity ^0.8.30;
 interface IFanumtaxEscrow {
     /**
      * @notice Escrow data structure
-     * @dev Storage optimized: uint96 + address (20 bytes) + bool = 29 bytes (fits in one slot)
+     * @dev Storage layout: uint96 (12 bytes) + address (20 bytes) + bool (1 byte) = 33 bytes (spans two slots)
      * @param totalAmount Total amount deposited in escrow (uint96 allows up to ~79B tokens with 18 decimals)
      * @param token ERC20 token address (address = 20 bytes)
      * @param claimed Whether the escrow has been claimed by prover
