@@ -20,6 +20,13 @@ export const createGithubRepositoryAdapter = (accessToken: string): RepositoryAd
     auth: accessToken,
   });
 
+  const parseGraphQlRepoId = (id: string) => {
+    const _id = atob(id);
+    const [_, repoId] = _id.split("Repository");
+
+    return repoId;
+  };
+
   const parseArrayQualifiers = <TValue extends string>(name: string, value: TValue[]) => {
     if (value.length === 0) return null;
     const valueQuery = value.map((lang) => `${name}:${lang}`).join(" ");
@@ -41,6 +48,7 @@ export const createGithubRepositoryAdapter = (accessToken: string): RepositoryAd
         const repo = getRepoResponse.data;
 
         return ok({
+          repoId: repo.id.toString(),
           owner: repo.owner.login,
           name: repo.name,
           description: repo.description ? repo.description : "",
@@ -138,6 +146,8 @@ export const createGithubRepositoryAdapter = (accessToken: string): RepositoryAd
               search (query: $q, type: $type, first: $first, after: $after) {
                 nodes {
                   ... on Repository {
+                    id
+                    databaseId
                     name
                     owner {
                       login
@@ -169,24 +179,26 @@ export const createGithubRepositoryAdapter = (accessToken: string): RepositoryAd
         );
 
         return ok({
-          items: results.search.nodes.map(
-            (node) =>
-              ({
-                owner: node.owner.login,
-                name: node.name,
-                description: node.description ? node.description : "",
-                url: node.url as string,
-                stars: node.stargazerCount,
-                forks: node.forkCount,
-                license: node.licenseInfo ? node.licenseInfo : null,
-                language: node.primaryLanguage
-                  ? {
-                      ...node.primaryLanguage,
-                      color: node.primaryLanguage.color ?? DEFAULT_LANGUAGE_COLOR,
-                    }
-                  : null,
-              }) satisfies ExternalRepository
-          ),
+          items: results.search.nodes.map((node) => {
+            const repoId = node.databaseId ? node.databaseId.toString() : parseGraphQlRepoId(node.id);
+
+            return {
+              repoId,
+              owner: node.owner.login,
+              name: node.name,
+              description: node.description ? node.description : "",
+              url: node.url as string,
+              stars: node.stargazerCount,
+              forks: node.forkCount,
+              license: node.licenseInfo ? node.licenseInfo : null,
+              language: node.primaryLanguage
+                ? {
+                    ...node.primaryLanguage,
+                    color: node.primaryLanguage.color ?? DEFAULT_LANGUAGE_COLOR,
+                  }
+                : null,
+            } satisfies ExternalRepository;
+          }),
           total: results.search.repositoryCount,
         });
       } catch (error) {

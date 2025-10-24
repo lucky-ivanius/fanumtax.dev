@@ -3,6 +3,8 @@ import type { License } from "./license";
 
 export interface Repository {
   /* Repository */
+  repoId: string;
+
   owner: string;
   name: string;
   description: string;

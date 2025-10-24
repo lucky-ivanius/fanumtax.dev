@@ -21,8 +21,8 @@ settingsHandlers.get(
     const connections = await db.select().from(tables.connections).where(eq(tables.connections.userId, c.var.auth.sub));
 
     const connected = Object.fromEntries(
-      connections.map(({ type, externalUsername }) => {
-        return [type, externalUsername];
+      connections.map(({ provider, externalUsername }) => {
+        return [provider, externalUsername];
       })
     );
 
