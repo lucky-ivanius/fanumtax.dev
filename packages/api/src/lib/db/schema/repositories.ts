@@ -14,6 +14,8 @@ export const repositories = sqliteTable(
 
     platform: text("platform", { enum: platforms }).notNull(),
 
+    repoId: text("repo_id").notNull(),
+
     owner: text("owner").notNull(),
     name: text("name").notNull(),
 

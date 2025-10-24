@@ -147,8 +147,9 @@ reposHandlers
 
       return ok<typeof c, Pagination<Repository>>(c, {
         items: repos.map(
-          ({ owner, name, description, url, stars, forks, license, language, totalBountyUsd }) =>
+          ({ repoId, owner, name, description, url, stars, forks, license, language, totalBountyUsd }) =>
             ({
+              repoId,
               owner,
               name,
               description,
@@ -235,6 +236,7 @@ reposHandlers
       }
 
       return ok<typeof c, Repository>(c, {
+        repoId: repo.repoId,
         owner,
         name,
         description: repo.description,
